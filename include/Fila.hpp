@@ -26,7 +26,9 @@ class Fila
 		//Remove o item na posição especificada 
 		void Remover(int pos);
 		//Recupera item na posição especificada
-		T Recupera(int i); 
+		T Recupera(int i);
+		//Recupera o ponteiro para o item na posição especificada
+		Celula<T>* RecuperaPonteiro(int i);
 	private:
 		int tamanho;
 		Celula<T> *frente;
@@ -129,15 +131,15 @@ int Fila<T>::Tamanho(){
 }
 
 template<typename T>
-T Fila<T>::Recupera(int i){
+Celula<T>* Fila<T>::RecuperaPonteiro(int i){
 
 	if (i > tamanho)
 	{
-		return "";
+		return nullptr;
 	}
 	else if(IsVazia())
 	{
-		return "";
+		return nullptr;
 	}
 	int aux = 0;
 	Celula<T> * itemAtual = frente;
@@ -147,7 +149,7 @@ T Fila<T>::Recupera(int i){
 			itemAtual = itemAtual->prox; 
 			aux++;
 		}
-		return itemAtual->dado;
+	return itemAtual;
 }
 
 template<typename T>
@@ -167,6 +169,28 @@ void Fila<T>::FurarFila(T item){
 	}
 
 	tamanho++;
+}
+
+template<typename T>
+T Fila<T>::Recupera(int i) {
+
+	if (i > tamanho)
+	{
+		return NULL;
+	}
+	else if (IsVazia())
+	{
+		return NULL;
+	}
+	int aux = 0;
+	Celula<T>* itemAtual = frente;
+
+	while (aux != i)
+	{
+		itemAtual = itemAtual->prox;
+		aux++;
+	}
+	return itemAtual->dado;
 }
 
 template<typename T>
