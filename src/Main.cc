@@ -6,81 +6,25 @@
 
 //função que compara strings e retorna uma string dizendo é a ordem entre as duas
 
-std::string compara(std::string n1, std::string n2) {
-    int aux = -1;
+bool compara(std::string n1, std::string n2) {
 
-    if (n1.length() > n2.length()) {
-        for (int i = 0; i < n2.length(); i++)
-        {
-            if (n2[i] != n1[i])
-            {
-                if (n2[i] < n1[i]) {
-                    aux = 2;
-                }
-                else {
-                    aux = 1;
-                }
-                break;
-            }
-        }
-    }
-    else if (n2.length() > n1.length()) {
-        for (int i = 0; i < n1.length(); i++)
-        {
-            if (n1[i] != n2[i])
-            {
-                if (n1[i] < n2[i])
-                {
-                    aux = 1;
-                }
-                else {
-                    aux = 2;
-                }
-                break;
-            }
-        }
-    }
-    else {
-        for (int i = 0; i < n1.length(); i++)
-        {
-            if (n1[i] != n2[i])
-            {
-                if (n1[i] < n2[i])
-                {
-                    aux = 1;
-                }
-                else {
-                    aux = 2;
-                }
+    int tamanho;
 
-            }
-            else {
-                aux = 0;
-            }
-        }
-    }
-
-    if (aux == 1)
-    {
-        return "A primeira vem antes";
-    }
-    else if (aux == 2) {
-        return "A segunda vem antes";
-    }
-    else if (aux == 0)
-    {
-        return "Sao iguais";
-    }
+    if (n1.size() < n2.size() == true)
+        tamanho = n1.size();
     else
+        tamanho = n2.size();
+
+    for (int i = 0; i < tamanho; i++)
     {
-        if (n1.length() > n2.length())
-        {
-            return "A segunda vem antes";
-        }
-        else {
-            return "A primeira vem antes";
-        }
-    }
+        if (n1[i] != n2[i] == true)
+            return n1[i] < n2[i];
+    } 
+
+    if(n2.size() > n1.size() == true)
+        return true;
+
+    return false;
 }
 
 //--- quickSort
@@ -117,7 +61,7 @@ int partition(Fila<std::string> *lista, int low, int high)
     for (int j = low; j <= high - 1; j++)
     {
         
-        if (compara(lista->Recupera(j), pivot) == "A primeira vem antes")
+        if (compara(lista->Recupera(j), pivot) == true)
         {
             i++;    
             trocar(i,j, lista);
@@ -140,7 +84,6 @@ void quickSort(Fila<std::string> *lista, int low, int high)
     }
 }
 
-//Implementação do merge sort
 void merge(Fila<std::string>* lista, int const left, int const mid, int const right)
 {
     int const subArrayOne = mid - left + 1;
@@ -160,7 +103,7 @@ void merge(Fila<std::string>* lista, int const left, int const mid, int const ri
 
 
     while (indexOfSubArrayOne < subArrayOne && indexOfSubArrayTwo < subArrayTwo) {
-        if (compara(lista1.Recupera(indexOfSubArrayOne), lista2.Recupera(indexOfSubArrayTwo)) == "A primeira vem antes") {
+        if (compara(lista1.Recupera(indexOfSubArrayOne), lista2.Recupera(indexOfSubArrayTwo)) == true) {
             lista->RecuperaPonteiro(indexOfMergedArray)->dado = lista1.Recupera(indexOfSubArrayOne);
             indexOfSubArrayOne++;
         }
@@ -195,6 +138,7 @@ void mergeSort(Fila<std::string>* lista, int const begin, int const end)
     merge(lista, begin, mid, end);
 }
 
+
 //merge sort fim
 
 //heapSort
@@ -220,13 +164,11 @@ void heapify(Fila<int>* lista, int n, int i)
 
 void heapSort(Fila<int> *lista, int n)
 {
-    // Build heap (rearrange array)
     for (int i = n / 2 - 1; i >= 0; i--)
         heapify(lista, n, i);
 
-    // One by one extract an element from heap
     for (int i = n - 1; i >= 0; i--) {
-        // Move current root to end
+
         trocarInt(0,i, lista);
 
         heapify(lista, i, 0);
@@ -307,9 +249,37 @@ int main(int argc, char *argv[])
         aux++;
     }
 
-    listaNomes.Imprimir();
-    listaInteiros.Imprimir();
+    switch (operacao)
+    {
+    case 1:
+        quickSort(&listaNomes,0,listaNomes.Tamanho()-1);
+        heapSort(&listaInteiros, listaNomes.Tamanho());
+        break;
+    case 2:
+        quickSort(&listaNomes,0,listaNomes.Tamanho()-1);
+        radixsort(&listaInteiros, listaNomes.Tamanho());
+        break;
+    case 3:
+        mergeSort(&listaNomes, 0, listaNomes.Tamanho() - 1);
+        heapSort(&listaInteiros, listaNomes.Tamanho());
+        break;
+    case 4:
+        mergeSort(&listaNomes, 0, listaNomes.Tamanho() - 1);
+        radixsort(&listaInteiros, listaNomes.Tamanho());
+    default:
+        break;
+    }
 
+    //quickSort(&listaNomes,0,listaNomes.Tamanho()-1);
+    //mergeSort(&listaNomes, 0, listaNomes.Tamanho() - 1);
+    //heapSort(&listaInteiros, listaNomes.Tamanho());
+    //radixsort(&listaInteiros, listaNomes.Tamanho());
+
+    for (int i = 0; i < listaNomes.Tamanho(); i++)
+    {
+        std::cout << listaNomes.Recupera(i) << " " << listaInteiros.Recupera(i) << std::endl;
+    }
+    
     fclose (arquivo);
     return 0;
 }
